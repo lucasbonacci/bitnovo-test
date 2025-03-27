@@ -14,6 +14,7 @@ import MoneyTime from './MoneyTime';
 import InfoCircle from './InfoCircle';
 import LightBlueCheck from './LightBlueCheck';
 import RightArrow from './RightArrow';
+import SearchIcon from './SearchIcon';
 
 export const SVG = {
   Euro,
@@ -32,4 +33,5 @@ export const SVG = {
   InfoCircle,
   LightBlueCheck,
   RightArrow,
+  SearchIcon,
 };

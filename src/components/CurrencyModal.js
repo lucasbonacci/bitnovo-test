@@ -37,6 +37,7 @@ const CurrencyModal = ({
 
   const handleSelectCurrency = currency => {
     onSelectCurrency(currency);
+    setSearchQuery('');
     onClose();
   };
 
@@ -56,22 +57,16 @@ const CurrencyModal = ({
   return (
     <Modal animationType="slide" transparent={false} visible={visible}>
       <View style={styles.container}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: 10,
-            marginBottom: 20,
-          }}>
+        <View style={styles.titleContainer}>
           <TouchableOpacity onPress={onClose}>
             <SVG.BackArrow />
           </TouchableOpacity>
           <Text style={styles.title}>Selecciona una divisa</Text>
-          <View />
+          <View style={{width: 28}} />
         </View>
 
         <View style={styles.searchContainer}>
+          <SVG.SearchIcon />
           <TextInput
             style={styles.searchInput}
             placeholder="Buscar"
@@ -120,23 +115,41 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingHorizontal: 16,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 20,
+  },
   title: {
+    fontFamily: 'Mulish-Bold',
     fontSize: 18,
-    fontWeight: '600',
-    color: '#002859',
     lineHeight: 22,
+    color: '#002859',
     textAlign: 'center',
   },
   searchContainer: {
-    backgroundColor: '#F2F2F2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
     borderRadius: 8,
     marginBottom: 16,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: '#E5E9F2',
   },
   searchInput: {
-    fontSize: 16,
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 20,
+    color: '#647184',
+    fontFamily: 'Mulish-Regular',
+    backgroundColor: '#FFFFFF',
+    marginLeft: 8,
   },
+
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -146,15 +159,20 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'column',
     paddingLeft: 10,
+    paddingTop: 5,
   },
   currencyName: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+    fontSize: 14,
+    lineHeight: 20,
+    fontFamily: 'Mulish-Bold',
+    color: '#002859',
+    letterSpacing: 0.2,
   },
   currencyCode: {
-    fontSize: 14,
-    color: '#999',
+    fontSize: 12,
+    lineHeight: 16,
+    color: '#647184',
+    fontFamily: 'Mulish-Regular',
   },
   checkMark: {
     color: '#007AFF',
