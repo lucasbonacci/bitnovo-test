@@ -1,3 +1,13 @@
 {
+  "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["src/*"]
+      },
+      
+    "module": "esnext",
+    "skipLibCheck": true,
+    "noUnusedLocals": true
+  },
   "extends": "@react-native/typescript-config/tsconfig.json"
 }
