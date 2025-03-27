@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, TextInput, Button} from 'react-native';
+import {View, StyleSheet, TextInput, Button, Text} from 'react-native';
 import CurrencyInput from 'react-native-currency-input';
 import type {RootScreenProps} from '@/navigation/types';
 import {Paths} from '@/navigation/paths';
@@ -29,7 +29,6 @@ const ScreenA: React.FC<CreatePaymentProps> = ({
 
   return (
     <View style={styles.container}>
-      
       <View style={styles.amountContainer}>
         <CurrencyInput
           value={amount}
@@ -53,7 +52,6 @@ const ScreenA: React.FC<CreatePaymentProps> = ({
           onChangeText={setConcept}
         />
       </View>
-
       <View style={styles.buttonContainer}>
         <Button title="Continuar" onPress={handleContinue} />
       </View>
