@@ -1,4 +1,4 @@
 export const enum Paths {
-  ScreenA = 'ScreenA',
+  CrearPago = 'CrearPago',
   ScreenB = 'ScreenB',
 }
