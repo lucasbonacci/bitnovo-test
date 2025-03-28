@@ -1,4 +1,6 @@
 export const enum Paths {
-  CrearPago = 'CrearPago',
-  ScreenB = 'ScreenB',
+  CreatePayment = 'CreatePayment',
+  PaymentRequest = 'PaymentRequest',
+  PaymentSuccess = 'PaymentSuccess',
+ 
 }

@@ -27,7 +27,12 @@ const Button = ({label, disabled, onPress, icon, variant = 'primary'}) => {
     case 'iconOnly':
       buttonStyle = {
         backgroundColor: '#035AC5',
-        padding: 10,
+        paddingVertical: 18,
+        paddingRight: 20,
+        paddingLeft: 10,
+        marginLeft: 4,
+        marginBottom: 12,
+        minWidth: 0,
       };
       break;
 
@@ -73,6 +78,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingVertical: 18,
     paddingHorizontal: 16,
+    minWidth: '100%',
   },
   content: {
     flexDirection: 'row',

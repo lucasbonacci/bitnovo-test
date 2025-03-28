@@ -1,2 +1,3 @@
-export { default as CrearPago } from './CrearPago/CrearPago';
-export { default as ScreenB } from './ScreenB/ScreenB';
+export { default as CreatePayment } from './CreatePayment/CreatePayment';
+export { default as PaymentRequest } from './PaymentRequest/PaymentRequest';
+export { default as PaymentSuccess } from './PaymentSuccess/PaymentSuccess';

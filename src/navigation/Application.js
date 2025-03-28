@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {Paths} from '@/navigation/paths';
-import {CrearPago, ScreenB} from '@/screens';
+import {CreatePayment, PaymentRequest, PaymentSuccess} from '@/screens';
 import CurrencyModal from '@/components/CurrencyModal';
 import {SVG} from '@/assets/svg/index';
 const Stack = createStackNavigator();
@@ -26,9 +26,10 @@ function ApplicationNavigator() {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen
-            name={Paths.CrearPago}
-            options={({navigation}) => ({
+            name={Paths.CreatePayment}
+            options={() => ({
               headerShown: true,
+              headerLeft: () => null,
               title: <Text style={styles.headerTitle}>Crear Pago</Text>,
               headerTitleAlign: 'center',
               headerRight: () => (
@@ -40,8 +41,9 @@ function ApplicationNavigator() {
                 </TouchableOpacity>
               ),
             })}>
-            {() => (
-              <CrearPago
+            {props => (
+              <CreatePayment
+                {...props}
                 amount={amount}
                 setAmount={setAmount}
                 concept={concept}
@@ -50,7 +52,40 @@ function ApplicationNavigator() {
               />
             )}
           </Stack.Screen>
-          <Stack.Screen component={ScreenB} name={Paths.ScreenB} />
+          <Stack.Screen
+            name={Paths.PaymentRequest}
+            options={() => ({
+              headerShown: true,
+              title: '',
+            })}>
+            {props => (
+              <PaymentRequest
+                {...props}
+                amount={amount}
+                concept={concept}
+                currency={currency.code}
+              />
+            )}
+          </Stack.Screen>
+          <Stack.Screen
+            name={Paths.PaymentSuccess}
+            options={() => ({
+              headerShown: true,
+              title: <SVG.Logo />,
+              headerTitleAlign: 'center',
+            })}>
+            {props => {
+              const {navigation} = props;
+
+              const handleFinish = () => {
+                navigation.navigate(Paths.CreatePayment);
+                setAmount(0);
+                setConcept('');
+              };
+
+              return <PaymentSuccess {...props} onFinish={handleFinish} />;
+            }}
+          </Stack.Screen>
         </Stack.Navigator>
         <CurrencyModal
           visible={modalVisible}

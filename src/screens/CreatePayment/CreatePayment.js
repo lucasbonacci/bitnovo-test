@@ -12,10 +12,14 @@ import {
 import CurrencyInput from 'react-native-currency-input';
 import {Button} from '@/components';
 
-const CrearPago = ({currency = {code: 'EUR'}, navigation}) => {
-  const [amount, setAmount] = useState(null);
-  const [concept, setConcept] = useState('');
-
+const CreatePayment = ({
+  amount,
+  setAmount,
+  concept,
+  setConcept,
+  currency = {code: 'EUR'},
+  navigation,
+}) => {
   const getCurrencyConfig = () => {
     switch (currency.code) {
       case 'USD':
@@ -37,9 +41,7 @@ const CrearPago = ({currency = {code: 'EUR'}, navigation}) => {
   const {prefix, suffix} = getCurrencyConfig();
 
   const handleContinue = () => {
-    console.log('Monto:', amount);
-    console.log('Concepto:', concept);
-    console.log('Moneda:', currency);
+    navigation.navigate('PaymentRequest');
   };
 
   return (
@@ -93,7 +95,7 @@ const CrearPago = ({currency = {code: 'EUR'}, navigation}) => {
   );
 };
 
-export default CrearPago;
+export default CreatePayment;
 
 const styles = StyleSheet.create({
   container: {

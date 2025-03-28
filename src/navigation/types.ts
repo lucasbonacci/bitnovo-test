@@ -2,8 +2,9 @@ import type { StackScreenProps } from '@react-navigation/stack';
 import type { Paths } from '@/navigation/paths';
 
 export type RootStackParamList = {
-  [Paths.CrearPago]: undefined;
-  [Paths.ScreenB]: undefined;
+  [Paths.CreatePayment]: undefined;
+  [Paths.PaymentRequest]: undefined;  
+  [Paths.PaymentSuccess]: undefined;
 };
 
 export type RootScreenProps<
