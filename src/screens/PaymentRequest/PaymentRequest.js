@@ -10,16 +10,14 @@ import {
 import {SVG} from '@/assets/svg/index';
 import {Button, SuccessModal} from '@/components';
 
-const PaymentRequest = ({
-  amount,
-  currency = '€',
-  paymentUrl = 'pay.bitnovo.com/59f9g9',
-}) => {
-  const formattedAmount = `${amount.toFixed(2).replace('.', ',')} ${currency}`;
+const PaymentRequest = ({route, navigation}) => {
+  const data = route.params.data;
+  const formattedAmount = `${data.amount} ${data.fiat}`;
+  const formattedUrl = data.web_url.replace(/^https?:\/\//, '');
   const [modalVisible, setModalVisible] = useState(false);
 
-  const create = () => {
-    setModalVisible(true);
+  const createNewPayment = () => {
+    navigation.navigate('CreatePayment');
   };
 
   return (
@@ -42,7 +40,7 @@ const PaymentRequest = ({
         <View style={styles.linkRow}>
           <View style={styles.optionButton}>
             <SVG.Link />
-            <Text style={styles.optionText}>pay.bitnovo.com/59f9g9</Text>
+            <Text style={styles.optionText}>{formattedUrl}</Text>
           </View>
           <Button
             label="Copiar enlace"
@@ -72,7 +70,7 @@ const PaymentRequest = ({
           label="Nueva solicitud"
           variant="secondary"
           icon={<SVG.AddWallet />}
-          onPress={() => create()}
+          onPress={() => createNewPayment()}
         />
       </View>
       <SuccessModal

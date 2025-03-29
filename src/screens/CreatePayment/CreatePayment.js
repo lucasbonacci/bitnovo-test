@@ -12,14 +12,11 @@ import {
 import CurrencyInput from 'react-native-currency-input';
 import {Button} from '@/components';
 
-const CreatePayment = ({
-  amount,
-  setAmount,
-  concept,
-  setConcept,
-  currency = {code: 'EUR'},
-  navigation,
-}) => {
+const CreatePayment = ({currency, navigation}) => {
+  const [amount, setAmount] = useState(0);
+  const [concept, setConcept] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const getCurrencyConfig = () => {
     switch (currency.code) {
       case 'USD':
@@ -40,8 +37,39 @@ const CreatePayment = ({
 
   const {prefix, suffix} = getCurrencyConfig();
 
-  const handleContinue = () => {
-    navigation.navigate('PaymentRequest');
+  const handleContinue = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('expected_output_amount', amount);
+      formData.append('fiat', currency.code);
+      formData.append('notes', concept);
+
+      setLoading(true);
+      const deviceId = 'd497719b-905f-4a41-8dbe-cf124c442f42';
+      const response = await fetch(
+        'https://payments.pre-bnvo.com/api/v1/orders/',
+        {
+          method: 'POST',
+          headers: {
+            'X-Device-Id': deviceId,
+          },
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData?.message || 'Error desconocido');
+      }
+
+      const data = await response.json();
+
+      navigation.navigate('PaymentRequest', {data: {...data, amount}});
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -88,6 +116,7 @@ const CreatePayment = ({
           label="Continuar"
           disabled={!amount || amount <= 0}
           variant="primary"
+          loading={loading}
           onPress={handleContinue}
         />
       </View>

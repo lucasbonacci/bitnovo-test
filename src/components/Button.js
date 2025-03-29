@@ -1,23 +1,36 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet, View} from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 
-const Button = ({label, disabled, onPress, icon, variant = 'primary'}) => {
+const Button = ({
+  label,
+  disabled,
+  onPress,
+  icon,
+  variant = 'primary',
+  loading = false,
+}) => {
   let buttonStyle = {};
   let textStyle = {};
 
   switch (variant) {
     case 'primary':
       buttonStyle = {
-        backgroundColor: disabled ? '#EAF3FF' : '#035AC5',
+        backgroundColor: disabled || loading ? '#EAF3FF' : '#035AC5',
       };
       textStyle = {
-        color: disabled ? '#71B0FD' : '#FFFFFF',
+        color: disabled || loading ? '#71B0FD' : '#FFFFFF',
       };
       break;
 
     case 'secondary':
       buttonStyle = {
-        backgroundColor: disabled ? '#D3DCE6' : '#F9FAFC',
+        backgroundColor: disabled || loading ? '#D3DCE6' : '#F9FAFC',
       };
       textStyle = {
         color: '#035AC5',
@@ -50,10 +63,10 @@ const Button = ({label, disabled, onPress, icon, variant = 'primary'}) => {
 
     default:
       buttonStyle = {
-        backgroundColor: disabled ? '#AECFFF' : '#007BFF',
+        backgroundColor: disabled || loading ? '#AECFFF' : '#007BFF',
       };
       textStyle = {
-        color: disabled ? '#6D6D6D' : '#FFFFFF',
+        color: disabled || loading ? '#6D6D6D' : '#FFFFFF',
       };
       break;
   }
@@ -61,13 +74,19 @@ const Button = ({label, disabled, onPress, icon, variant = 'primary'}) => {
   return (
     <TouchableOpacity
       style={[styles.buttonBase, buttonStyle]}
-      onPress={disabled ? null : onPress}
-      disabled={disabled}>
+      onPress={disabled || loading ? null : onPress}
+      disabled={disabled || loading}>
       <View style={styles.content}>
-        {variant !== 'iconOnly' && label ? (
-          <Text style={[styles.text, textStyle]}>{label}</Text>
-        ) : null}
-        {icon ? <View style={styles.iconContainer}>{icon}</View> : null}
+        {loading ? (
+          <ActivityIndicator color={textStyle.color || '#FFFFFF'} />
+        ) : (
+          <>
+            {variant !== 'iconOnly' && label ? (
+              <Text style={[styles.text, textStyle]}>{label}</Text>
+            ) : null}
+            {icon ? <View style={styles.iconContainer}>{icon}</View> : null}
+          </>
+        )}
       </View>
     </TouchableOpacity>
   );

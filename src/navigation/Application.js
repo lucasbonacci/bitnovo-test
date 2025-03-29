@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -12,8 +12,6 @@ import {SVG} from '@/assets/svg/index';
 const Stack = createStackNavigator();
 
 function ApplicationNavigator() {
-  const [amount, setAmount] = useState(0);
-  const [concept, setConcept] = useState('');
   const [currency, setCurrency] = useState({
     name: 'Dólar Estadounidense',
     code: 'USD',
@@ -41,31 +39,14 @@ function ApplicationNavigator() {
                 </TouchableOpacity>
               ),
             })}>
-            {props => (
-              <CreatePayment
-                {...props}
-                amount={amount}
-                setAmount={setAmount}
-                concept={concept}
-                setConcept={setConcept}
-                currency={currency}
-              />
-            )}
+            {props => <CreatePayment {...props} currency={currency} />}
           </Stack.Screen>
           <Stack.Screen
             name={Paths.PaymentRequest}
             options={() => ({
-              headerShown: true,
-              title: '',
+              headerShown: false,
             })}>
-            {props => (
-              <PaymentRequest
-                {...props}
-                amount={amount}
-                concept={concept}
-                currency={currency.code}
-              />
-            )}
+            {props => <PaymentRequest {...props} />}
           </Stack.Screen>
           <Stack.Screen
             name={Paths.PaymentSuccess}
