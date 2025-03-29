@@ -6,7 +6,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {Paths} from '@/navigation/paths';
-import {CreatePayment, PaymentRequest, PaymentSuccess} from '@/screens';
+import {
+  CreatePayment,
+  PaymentRequest,
+  PaymentSuccess,
+  QRCodePayment,
+} from '@/screens';
 import CurrencyModal from '@/components/CurrencyModal';
 import {SVG} from '@/assets/svg/index';
 const Stack = createStackNavigator();
@@ -66,6 +71,22 @@ function ApplicationNavigator() {
 
               return <PaymentSuccess {...props} onFinish={handleFinish} />;
             }}
+          </Stack.Screen>
+          <Stack.Screen
+            name={Paths.QRCodePayment}
+            options={props => ({
+              headerShown: true,
+              title: '',
+              headerLeft: () => (
+                <TouchableOpacity
+                  style={{marginLeft: 10}}
+                  onPress={() => props.navigation.goBack()}>
+                  <SVG.BackArrow />
+                </TouchableOpacity>
+              ),
+              headerTitleAlign: 'center',
+            })}>
+            {props => <QRCodePayment {...props} currency={currency} />}
           </Stack.Screen>
         </Stack.Navigator>
         <CurrencyModal

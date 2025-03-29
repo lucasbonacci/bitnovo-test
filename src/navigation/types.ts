@@ -5,6 +5,7 @@ export type RootStackParamList = {
   [Paths.CreatePayment]: undefined;
   [Paths.PaymentRequest]: undefined;  
   [Paths.PaymentSuccess]: undefined;
+  [Paths.QRCodePayment]: undefined;
 };
 
 export type RootScreenProps<

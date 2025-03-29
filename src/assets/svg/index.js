@@ -17,6 +17,7 @@ import RightArrow from './RightArrow';
 import SearchIcon from './SearchIcon';
 import ArrowDown from './ArrowDown';
 import GreenCheck from './GreenCheck';
+import LogoQr from './LogoQr';
 
 export const SVG = {
   Euro,
@@ -38,4 +39,5 @@ export const SVG = {
   SearchIcon,
   ArrowDown,
   GreenCheck,
+  LogoQr,
 };

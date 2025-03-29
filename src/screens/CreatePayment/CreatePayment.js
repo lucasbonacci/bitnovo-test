@@ -64,7 +64,9 @@ const CreatePayment = ({currency, navigation}) => {
 
       const data = await response.json();
 
-      navigation.navigate('PaymentRequest', {data: {...data, amount}});
+      navigation.navigate('PaymentRequest', {
+        data: {...data, amount, prefix, suffix},
+      });
     } catch (err) {
       console.error(err);
     } finally {

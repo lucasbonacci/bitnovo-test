@@ -13,7 +13,7 @@ import {Button} from '@/components';
 
 const {width} = Dimensions.get('window');
 
-const SuccessModal = ({visible, onClose}) => {
+const SuccessModal = ({visible, onClose, title, subtitle}) => {
   return (
     <Modal animationType="slide" transparent visible={visible}>
       <View style={styles.wrapper}>
@@ -29,11 +29,9 @@ const SuccessModal = ({visible, onClose}) => {
             <SVG.LightBlueCheck />
           </View>
 
-          <Text style={styles.title}>Solicitud enviada</Text>
+          <Text style={styles.title}>{title}</Text>
 
-          <Text style={styles.message}>
-            Tu solicitud de pago enviada ha sido enviada con éxito por WhatsApp.
-          </Text>
+          <Text style={styles.message}>{subtitle}</Text>
 
           <Button label="Entendido" variant="primary" onPress={onClose} />
         </View>
