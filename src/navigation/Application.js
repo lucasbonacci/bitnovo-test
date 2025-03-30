@@ -59,18 +59,9 @@ function ApplicationNavigator() {
               headerShown: true,
               title: <SVG.Logo />,
               headerTitleAlign: 'center',
+              headerLeft: () => null,
             })}>
-            {props => {
-              const {navigation} = props;
-
-              const handleFinish = () => {
-                navigation.navigate(Paths.CreatePayment);
-                setAmount(0);
-                setConcept('');
-              };
-
-              return <PaymentSuccess {...props} onFinish={handleFinish} />;
-            }}
+            {props => <PaymentSuccess {...props} />}
           </Stack.Screen>
           <Stack.Screen
             name={Paths.QRCodePayment}

@@ -4,12 +4,16 @@ import {SVG} from '@/assets/svg/index';
 import {Button} from '@/components';
 import LottieView from 'lottie-react-native';
 
-const PaymentSuccess = ({onFinish}) => {
+const PaymentSuccess = ({navigation}) => {
   const lottieRef = useRef(null);
 
   useEffect(() => {
     lottieRef.current?.play();
   }, []);
+
+  const handleFinish = () => {
+    navigation.navigate('CreatePayment');
+  };
 
   return (
     <View style={styles.container}>
@@ -28,7 +32,7 @@ const PaymentSuccess = ({onFinish}) => {
       </View>
 
       <View style={styles.button}>
-        <Button label="Finalizar" variant="secondary" onPress={onFinish} />
+        <Button label="Finalizar" variant="secondary" onPress={handleFinish} />
       </View>
     </View>
   );
