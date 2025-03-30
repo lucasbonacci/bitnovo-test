@@ -2,10 +2,14 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {SVG} from '@/assets/svg/index';
+import {usePaymentSocket} from '@/hooks/usePaymentSocket';
 
 const QRCodePayment = ({route}) => {
-  const paymentLink = route.params.fullUrl;
-  const amount = route.params.formattedAmount;
+  const {identifier, amount, paymentLink} = route.params;
+
+  usePaymentSocket(identifier, 'qr', message => {
+    console.log('Mensaje recibido desde el socket:', message);
+  });
 
   return (
     <View style={styles.container}>

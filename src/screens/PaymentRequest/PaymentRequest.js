@@ -11,9 +11,10 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 import {SVG} from '@/assets/svg/index';
 import {Button, SuccessModal} from '@/components';
+import {usePaymentSocket} from '@/hooks/usePaymentSocket';
 
 const PaymentRequest = ({route, navigation}) => {
-  const {amount, prefix, suffix, fiat, web_url} = route.params.data;
+  const {amount, prefix, suffix, fiat, web_url, identifier} = route.params.data;
 
   const formattedAmount = `${prefix}${amount.toFixed(2)}${suffix}`;
   const formattedUrl = web_url.replace(/^https?:\/\//, '');
@@ -22,6 +23,10 @@ const PaymentRequest = ({route, navigation}) => {
   const [modalContent, setModalContent] = useState({
     title: '',
     subtitle: '',
+  });
+
+  usePaymentSocket(identifier, 'payment', message => {
+    console.log('Mensaje recibido desde el socket:', message);
   });
 
   const createNewPayment = () => {
@@ -117,7 +122,11 @@ const PaymentRequest = ({route, navigation}) => {
             label="Copiar enlace"
             variant="iconOnly"
             onPress={() =>
-              navigation.navigate('QRCodePayment', {fullUrl, formattedAmount})
+              navigation.navigate('QRCodePayment', {
+                fullUrl,
+                formattedAmount,
+                identifier,
+              })
             }
             icon={<SVG.ScanBarCode />}
           />
