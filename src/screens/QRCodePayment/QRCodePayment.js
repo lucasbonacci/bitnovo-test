@@ -14,7 +14,7 @@ const QRCodePayment = ({route}) => {
     type: '',
   });
 
-  usePaymentSocket(identifier, 'payment', message => {
+  usePaymentSocket(identifier, 'qr', message => {
     if (message.status === 'CO') {
       navigation.navigate('PaymentSuccess');
     }
