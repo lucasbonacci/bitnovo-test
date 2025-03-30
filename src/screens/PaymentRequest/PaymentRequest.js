@@ -155,7 +155,7 @@ const PaymentRequest = ({route, navigation}) => {
             onPress={() =>
               navigation.navigate('QRCodePayment', {
                 fullUrl,
-                formattedAmount,
+                amount: formattedAmount,
                 identifier,
               })
             }

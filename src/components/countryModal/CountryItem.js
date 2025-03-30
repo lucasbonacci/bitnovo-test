@@ -8,11 +8,11 @@ const CountryItem = ({item, isSelected, onPress}) => {
       <View style={styles.leftSection}>
         <Image
           source={{uri: item.flag}}
-          style={{width: 28, height: 20, borderRadius: 3}}
+          style={{width: 28, height: 28, borderRadius: 14}}
         />
         <View style={styles.textContainer}>
-          <Text style={styles.countryName}>{item.name}</Text>
           <Text style={styles.countryCode}>{item.code}</Text>
+          <Text style={styles.countryName}>{item.name}</Text>
         </View>
       </View>
       {isSelected ? <SVG.BlueCheck /> : <SVG.RightArrow />}
@@ -38,16 +38,16 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   countryName: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: '#647184',
+    fontFamily: 'Mulish-Regular',
+  },
+  countryCode: {
     fontSize: 14,
     lineHeight: 20,
     fontFamily: 'Mulish-Bold',
     color: '#002859',
     letterSpacing: 0.2,
-  },
-  countryCode: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: '#647184',
-    fontFamily: 'Mulish-Regular',
   },
 });
