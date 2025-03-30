@@ -7,11 +7,13 @@ import {
   ScrollView,
   Linking,
   Share,
+  TextInput,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {SVG} from '@/assets/svg/index';
-import {Button, SuccessModal} from '@/components';
+import {Button, SuccessModal, CountryModal} from '@/components';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
+import {parsePhoneNumberFromString} from 'libphonenumber-js';
 
 const PaymentRequest = ({route, navigation}) => {
   const {amount, prefix, suffix, fiat, web_url, identifier} = route.params.data;
@@ -19,6 +21,9 @@ const PaymentRequest = ({route, navigation}) => {
   const formattedAmount = `${prefix}${amount.toFixed(2)}${suffix}`;
   const formattedUrl = web_url.replace(/^https?:\/\//, '');
   const fullUrl = web_url;
+  const [selectedCountry, setSelectedCountry] = useState({});
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [countryModalVisible, setCountryModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalContent, setModalContent] = useState({
     title: '',
@@ -27,7 +32,6 @@ const PaymentRequest = ({route, navigation}) => {
   });
 
   usePaymentSocket(identifier, 'payment', message => {
-    console.log('Mensaje recibido desde el socket:', message);
     if (message.status === 'CO') {
       navigation.navigate('PaymentSuccess');
     }
@@ -41,10 +45,6 @@ const PaymentRequest = ({route, navigation}) => {
       setModalVisible(true);
     }
   });
-
-  const createNewPayment = () => {
-    navigation.navigate('CreatePayment');
-  };
 
   const handleCopyLink = () => {
     Clipboard.setString(fullUrl);
@@ -77,15 +77,21 @@ const PaymentRequest = ({route, navigation}) => {
   };
 
   const handleSendWhatsApp = () => {
+    const fullPhoneNumber = `${selectedCountry.code}${phoneNumber}`.replace(
+      /\D/g,
+      '',
+    );
+
     const message = encodeURIComponent(
       `Hola, te comparto mi enlace de pago: ${fullUrl}`,
     );
-    const url = `whatsapp://send?phone=5493585628233&text=${message}`;
+    const url = `whatsapp://send?phone=${fullPhoneNumber}&text=${message}`;
     Linking.openURL(url)
       .then(() => {
         setModalContent({
           title: 'WhatsApp',
-          subtitle: 'Se ha abierto WhatsApp para compartir el enlace.',
+          subtitle:
+            'Se ha abierto WhatsApp para compartir el enlace a su contacto.',
           type: 'success',
         });
         setModalVisible(true);
@@ -94,6 +100,13 @@ const PaymentRequest = ({route, navigation}) => {
         console.error('Asegúrate de tener WhatsApp instalado', err),
       );
   };
+
+  const isPhoneValid = (phone, country) => {
+    const parsed = parsePhoneNumberFromString(phone, country);
+
+    return parsed?.isValid() || false;
+  };
+
   const handleShareLink = async () => {
     try {
       const result = await Share.share({
@@ -155,12 +168,39 @@ const PaymentRequest = ({route, navigation}) => {
           <Text style={styles.optionText}>Enviar por correo electrónico</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.optionButton}
-          onPress={handleSendWhatsApp}>
-          <SVG.WhatApp />
-          <Text style={styles.optionText}>Enviar a número de WhatsApp</Text>
-        </TouchableOpacity>
+        {Object.keys(selectedCountry).length === 0 ? (
+          <TouchableOpacity
+            style={styles.optionButton}
+            onPress={() => setCountryModalVisible(true)}>
+            <SVG.WhatApp />
+            <Text style={styles.optionText}>Enviar a número de WhatsApp</Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={[styles.optionButton, {paddingVertical: 6}]}>
+            <TouchableOpacity
+              onPress={() => setCountryModalVisible(true)}
+              style={styles.countrySection}>
+              <SVG.WhatApp />
+              <Text style={styles.countryCodeText}>{selectedCountry.code}</Text>
+              <SVG.ArrowDown style={{marginLeft: 4}} />
+            </TouchableOpacity>
+
+            <TextInput
+              placeholder="200 5869 75423"
+              style={styles.numberInput}
+              keyboardType="phone-pad"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+            />
+
+            <Button
+              label="Enviar"
+              variant="small"
+              onPress={handleSendWhatsApp}
+              disabled={!isPhoneValid(phoneNumber, selectedCountry.cca2)}
+            />
+          </View>
+        )}
 
         <TouchableOpacity style={styles.optionButton} onPress={handleShareLink}>
           <SVG.Share />
@@ -175,7 +215,7 @@ const PaymentRequest = ({route, navigation}) => {
           label="Nueva solicitud"
           variant="secondary"
           icon={<SVG.AddWallet />}
-          onPress={createNewPayment}
+          onPress={() => navigation.navigate('CreatePayment')}
         />
       </View>
       <SuccessModal
@@ -184,6 +224,13 @@ const PaymentRequest = ({route, navigation}) => {
         title={modalContent.title}
         subtitle={modalContent.subtitle}
         type={modalContent.type}
+      />
+      <CountryModal
+        visible={countryModalVisible}
+        onClose={() => setCountryModalVisible(false)}
+        onSelectCountry={() => {}}
+        selectedCountry={selectedCountry}
+        setSelectedCountry={setSelectedCountry}
       />
     </ScrollView>
   );
@@ -266,5 +313,25 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginBottom: 20,
+  },
+  countrySection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingRight: 8,
+  },
+  countryCodeText: {
+    marginLeft: 10,
+    marginRight: 6,
+    fontSize: 14,
+    color: '#002859',
+    fontFamily: 'Mulish-Regular',
+  },
+  numberInput: {
+    flex: 1,
+    fontSize: 14,
+    lineHeight: 18,
+    color: '#002859',
+    paddingLeft: 5,
+    fontFamily: 'Mulish-Regular',
   },
 });

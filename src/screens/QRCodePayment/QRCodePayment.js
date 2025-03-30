@@ -15,7 +15,6 @@ const QRCodePayment = ({route}) => {
   });
 
   usePaymentSocket(identifier, 'payment', message => {
-    console.log('Mensaje recibido desde el socket:', message);
     if (message.status === 'CO') {
       navigation.navigate('PaymentSuccess');
     }

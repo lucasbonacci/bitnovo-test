@@ -51,12 +51,14 @@ const Button = ({
 
     case 'small':
       buttonStyle = {
-        backgroundColor: '#035AC5',
+        backgroundColor: disabled ? '#EAF3FF' : '#035AC5',
         paddingVertical: 6,
         paddingHorizontal: 12,
+        maxWidth: 60,
+        minWidth: 0,
       };
       textStyle = {
-        color: '#FFFFFF',
+        color: disabled ? '#71B0FD' : '#FFFFFF',
         fontSize: 12,
       };
       break;
