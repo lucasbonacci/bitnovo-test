@@ -1,14 +1,33 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {SVG} from '@/assets/svg/index';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
+import {SuccessModal} from '@/components';
 
 const QRCodePayment = ({route}) => {
   const {identifier, amount, paymentLink} = route.params;
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: '',
+    subtitle: '',
+    type: '',
+  });
 
-  usePaymentSocket(identifier, 'qr', message => {
+  usePaymentSocket(identifier, 'payment', message => {
     console.log('Mensaje recibido desde el socket:', message);
+    if (message.status === 'CO') {
+      navigation.navigate('PaymentSuccess');
+    }
+
+    if (message.status === 'AC') {
+      setModalContent({
+        title: 'Esperando confirmacion',
+        subtitle: 'Pago recibido pero no confirmado aún',
+        type: 'loading',
+      });
+      setModalVisible(true);
+    }
   });
 
   return (
@@ -38,6 +57,13 @@ const QRCodePayment = ({route}) => {
       <Text style={styles.updateText}>
         Esta pantalla se actualizará automáticamente.
       </Text>
+      <SuccessModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        title={modalContent.title}
+        subtitle={modalContent.subtitle}
+        type={modalContent.type}
+      />
     </View>
   );
 };

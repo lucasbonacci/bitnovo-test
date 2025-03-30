@@ -23,10 +23,23 @@ const PaymentRequest = ({route, navigation}) => {
   const [modalContent, setModalContent] = useState({
     title: '',
     subtitle: '',
+    type: '',
   });
 
   usePaymentSocket(identifier, 'payment', message => {
     console.log('Mensaje recibido desde el socket:', message);
+    if (message.status === 'CO') {
+      navigation.navigate('PaymentSuccess');
+    }
+
+    if (message.status === 'AC') {
+      setModalContent({
+        title: 'Esperando confirmacion',
+        subtitle: 'Pago recibido pero no confirmado aún',
+        type: 'loading',
+      });
+      setModalVisible(true);
+    }
   });
 
   const createNewPayment = () => {
@@ -39,6 +52,7 @@ const PaymentRequest = ({route, navigation}) => {
     setModalContent({
       title: 'Éxito',
       subtitle: 'Se ha copiado el enlace correctamente.',
+      type: 'success',
     });
   };
 
@@ -51,10 +65,12 @@ const PaymentRequest = ({route, navigation}) => {
     Linking.openURL(mailtoUrl)
       .then(() => {
         setModalContent({
-          title: 'Correo listo',
+          title: 'Correo',
           subtitle:
             'Se ha abierto tu cliente de correo para compartir el enlace.',
+          type: 'success',
         });
+
         setModalVisible(true);
       })
       .catch(err => console.error('Error al abrir el cliente de correo', err));
@@ -68,8 +84,9 @@ const PaymentRequest = ({route, navigation}) => {
     Linking.openURL(url)
       .then(() => {
         setModalContent({
-          title: 'WhatsApp listo',
+          title: 'WhatsApp',
           subtitle: 'Se ha abierto WhatsApp para compartir el enlace.',
+          type: 'success',
         });
         setModalVisible(true);
       })
@@ -85,8 +102,9 @@ const PaymentRequest = ({route, navigation}) => {
 
       if (result.action === Share.sharedAction) {
         setModalContent({
-          title: 'Diálogo de compartir listo',
+          title: 'Diálogo de compartir',
           subtitle: 'Se ha abierto el diálogo para compartir el enlace.',
+          type: 'loading',
         });
         setModalVisible(true);
       }
@@ -165,6 +183,7 @@ const PaymentRequest = ({route, navigation}) => {
         onClose={() => setModalVisible(false)}
         title={modalContent.title}
         subtitle={modalContent.subtitle}
+        type={modalContent.type}
       />
     </ScrollView>
   );

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
 import {SVG} from '@/assets/svg/index';
@@ -13,7 +14,7 @@ import {Button} from '@/components';
 
 const {width} = Dimensions.get('window');
 
-const SuccessModal = ({visible, onClose, title, subtitle}) => {
+const SuccessModal = ({visible, onClose, title, subtitle, type}) => {
   return (
     <Modal animationType="slide" transparent visible={visible}>
       <View style={styles.wrapper}>
@@ -26,7 +27,11 @@ const SuccessModal = ({visible, onClose, title, subtitle}) => {
         <View style={styles.overlay} />
         <View style={styles.modalCard}>
           <View style={styles.iconCircle}>
-            <SVG.LightBlueCheck />
+            {type === 'success' ? (
+              <SVG.LightBlueCheck />
+            ) : (
+              <ActivityIndicator size={'large'} color={'#002859'} />
+            )}
           </View>
 
           <Text style={styles.title}>{title}</Text>
