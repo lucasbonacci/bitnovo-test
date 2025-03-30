@@ -105,6 +105,7 @@ const CreatePayment = ({currency, navigation}) => {
             onChangeText={setConcept}
             maxLength={140}
             multiline
+            placeholderTextColor="#647184"
           />
         </View>
         {concept.length > 0 && (

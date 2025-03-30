@@ -72,6 +72,7 @@ const CurrencyModal = ({
             placeholder="Buscar"
             value={searchQuery}
             onChangeText={setSearchQuery}
+            placeholderTextColor="#647184"
           />
         </View>
 

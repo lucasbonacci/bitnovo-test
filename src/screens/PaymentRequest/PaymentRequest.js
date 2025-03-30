@@ -186,11 +186,12 @@ const PaymentRequest = ({route, navigation}) => {
             </TouchableOpacity>
 
             <TextInput
-              placeholder="200 5869 75423"
+              placeholder="300 678 9087"
               style={styles.numberInput}
               keyboardType="phone-pad"
               value={phoneNumber}
               onChangeText={setPhoneNumber}
+              placeholderTextColor="#647184"
             />
 
             <Button
