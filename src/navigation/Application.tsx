@@ -62,7 +62,7 @@ function ApplicationNavigator() {
             name={Paths.PaymentSuccess}
             options={() => ({
               headerShown: true,
-              title: 'Payment Success',
+              headerTitle: () => <SVG.Logo />,
               headerTitleAlign: 'center',
               headerLeft: () => null,
             })}
