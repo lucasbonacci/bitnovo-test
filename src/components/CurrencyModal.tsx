@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Mulish-Regular',
     backgroundColor: '#FFFFFF',
     marginLeft: 8,
+    letterSpacing: 0.2,
   },
   listItem: {
     flexDirection: 'row',
