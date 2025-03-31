@@ -15,26 +15,41 @@ import {Button, SuccessModal, CountryModal} from '@/components';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
 import {parsePhoneNumberFromString} from 'libphonenumber-js';
 import * as NavigationService from '@/navigation/NavigationService';
+import {Paths} from '@/navigation/paths';
+import {RootScreenProps} from '@/navigation/types';
 
-const PaymentRequest = ({route}) => {
-  const {amount, prefix, suffix, fiat, web_url, identifier} = route.params.data;
+interface Country {
+  code: string;
+  cca2: string;
+}
 
+interface ModalContent {
+  title: string;
+  subtitle: string;
+  type: string;
+}
+
+type PaymentRequestProps = RootScreenProps<typeof Paths.PaymentRequest>;
+
+const PaymentRequest: React.FC<PaymentRequestProps> = ({route}) => {
+  const {amount, prefix, suffix, web_url, identifier} = route.params.data;
   const formattedAmount = `${prefix}${amount.toFixed(2)}${suffix}`;
   const formattedUrl = web_url.replace(/^https?:\/\//, '');
   const fullUrl = web_url;
-  const [selectedCountry, setSelectedCountry] = useState({});
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [countryModalVisible, setCountryModalVisible] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState({
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [countryModalVisible, setCountryModalVisible] =
+    useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<ModalContent>({
     title: '',
     subtitle: '',
     type: '',
   });
 
-  usePaymentSocket(identifier, 'payment', message => {
+  usePaymentSocket(identifier, 'payment', (message: {status: string}) => {
     if (message.status === 'CO') {
-      NavigationService.reset('PaymentSuccess');
+      NavigationService.reset(Paths.PaymentSuccess);
     }
 
     if (message.status === 'AC') {
@@ -71,18 +86,15 @@ const PaymentRequest = ({route}) => {
             'Se ha abierto tu cliente de correo para compartir el enlace.',
           type: 'success',
         });
-
         setModalVisible(true);
       })
       .catch(err => console.error('Error al abrir el cliente de correo', err));
   };
 
   const handleSendWhatsApp = () => {
-    const fullPhoneNumber = `${selectedCountry.code}${phoneNumber}`.replace(
-      /\D/g,
-      '',
-    );
-
+    const fullPhoneNumber = `${
+      selectedCountry?.code || ''
+    }${phoneNumber}`.replace(/\D/g, '');
     const message = encodeURIComponent(
       `Hola, te comparto mi enlace de pago: ${fullUrl}`,
     );
@@ -102,9 +114,8 @@ const PaymentRequest = ({route}) => {
       );
   };
 
-  const isPhoneValid = (phone, country) => {
-    const parsed = parsePhoneNumberFromString(phone, country);
-
+  const isPhoneValid = (phone: string, country: Country): boolean => {
+    const parsed = parsePhoneNumberFromString(phone, country.cca2 as any);
     return parsed?.isValid() || false;
   };
 
@@ -154,13 +165,14 @@ const PaymentRequest = ({route}) => {
             label="Copiar enlace"
             variant="iconOnly"
             onPress={() =>
-              NavigationService.navigate('QRCodePayment', {
+              NavigationService.navigate(Paths.QRCodePayment, {
                 fullUrl,
                 amount: formattedAmount,
                 identifier,
               })
             }
             icon={<SVG.ScanBarCode />}
+            disabled={false}
           />
         </View>
 
@@ -169,7 +181,7 @@ const PaymentRequest = ({route}) => {
           <Text style={styles.optionText}>Enviar por correo electrónico</Text>
         </TouchableOpacity>
 
-        {Object.keys(selectedCountry).length === 0 ? (
+        {selectedCountry === null ? (
           <TouchableOpacity
             style={styles.optionButton}
             onPress={() => setCountryModalVisible(true)}>
@@ -183,7 +195,9 @@ const PaymentRequest = ({route}) => {
               style={styles.countrySection}>
               <SVG.WhatApp />
               <Text style={styles.countryCodeText}>{selectedCountry.code}</Text>
-              <SVG.ArrowDown style={{marginLeft: 4}} />
+              <View style={{marginLeft: 4}}>
+                <SVG.ArrowDown />
+              </View>
             </TouchableOpacity>
 
             <TextInput
@@ -199,7 +213,8 @@ const PaymentRequest = ({route}) => {
               label="Enviar"
               variant="small"
               onPress={handleSendWhatsApp}
-              disabled={!isPhoneValid(phoneNumber, selectedCountry.cca2)}
+              disabled={!isPhoneValid(phoneNumber, selectedCountry)}
+              icon={null}
             />
           </View>
         )}
@@ -217,7 +232,8 @@ const PaymentRequest = ({route}) => {
           label="Nueva solicitud"
           variant="secondary"
           icon={<SVG.AddWallet />}
-          onPress={() => NavigationService.reset('CreatePayment')}
+          onPress={() => NavigationService.reset(Paths.CreatePayment)}
+          disabled={false}
         />
       </View>
       <SuccessModal
@@ -230,7 +246,6 @@ const PaymentRequest = ({route}) => {
       <CountryModal
         visible={countryModalVisible}
         onClose={() => setCountryModalVisible(false)}
-        onSelectCountry={() => {}}
         selectedCountry={selectedCountry}
         setSelectedCountry={setSelectedCountry}
       />

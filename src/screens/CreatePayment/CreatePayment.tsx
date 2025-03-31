@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TextInput,
   Text,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -12,11 +11,21 @@ import {
 import CurrencyInput from 'react-native-currency-input';
 import {Button} from '@/components';
 import * as NavigationService from '@/navigation/NavigationService';
+import {Paths} from '@/navigation/paths';
 
-const CreatePayment = ({currency}) => {
-  const [amount, setAmount] = useState(0);
-  const [concept, setConcept] = useState('');
-  const [loading, setLoading] = useState(false);
+interface Currency {
+  name: string;
+  code: string;
+}
+
+interface CreatePaymentProps {
+  currency: Currency;
+}
+
+const CreatePayment: React.FC<CreatePaymentProps> = ({currency}) => {
+  const [amount, setAmount] = useState<number>(0);
+  const [concept, setConcept] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const getCurrencyConfig = () => {
     switch (currency.code) {
@@ -65,7 +74,7 @@ const CreatePayment = ({currency}) => {
 
       const data = await response.json();
 
-      NavigationService.reset('PaymentRequest', {
+      NavigationService.reset(Paths.PaymentRequest, {
         data: {...data, amount, prefix, suffix},
       });
     } catch (err) {
@@ -84,7 +93,7 @@ const CreatePayment = ({currency}) => {
         <View style={styles.amountContainer}>
           <CurrencyInput
             value={amount}
-            onChangeValue={setAmount}
+            onChangeValue={value => setAmount(value ?? 0)}
             prefix={prefix}
             suffix={suffix}
             delimiter=","
@@ -122,6 +131,7 @@ const CreatePayment = ({currency}) => {
           variant="primary"
           loading={loading}
           onPress={handleContinue}
+          icon={null}
         />
       </View>
     </KeyboardAvoidingView>
@@ -168,7 +178,6 @@ const styles = StyleSheet.create({
     color: '#002859',
     marginBottom: 5,
   },
-
   buttonContainer: {
     marginBottom: 20,
   },
@@ -176,9 +185,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: 12,
     fontFamily: 'Mulish-Regular',
-    fontFamily: 'Mulish-Regular',
     color: '#647184',
-
     marginRight: 4,
   },
 });

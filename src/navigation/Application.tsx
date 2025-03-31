@@ -16,7 +16,6 @@ import CurrencyModal from '@/components/CurrencyModal';
 import {SVG} from '@/assets/svg/index';
 import {RootStackParamList} from './types';
 
-
 const Stack = createStackNavigator<RootStackParamList>();
 
 interface Currency {
@@ -59,9 +58,10 @@ function ApplicationNavigator() {
             name={Paths.PaymentRequest}
             options={() => ({
               headerShown: false,
-            })}>
-            {props => <PaymentRequest {...props} />}
-          </Stack.Screen>
+            })}
+            component={PaymentRequest}
+          />
+
           <Stack.Screen
             name={Paths.PaymentSuccess}
             options={() => ({
@@ -69,9 +69,9 @@ function ApplicationNavigator() {
               title: 'Payment Success',
               headerTitleAlign: 'center',
               headerLeft: () => null,
-            })}>
-            {() => <PaymentSuccess />}
-          </Stack.Screen>
+            })}
+            component={PaymentSuccess}
+          />
           <Stack.Screen
             name={Paths.QRCodePayment}
             options={() => ({
@@ -85,9 +85,9 @@ function ApplicationNavigator() {
                 </TouchableOpacity>
               ),
               headerTitleAlign: 'center',
-            })}>
-            {props => <QRCodePayment {...props} />}
-          </Stack.Screen>
+            })}
+            component={QRCodePayment}
+          />
         </Stack.Navigator>
         <CurrencyModal
           visible={modalVisible}

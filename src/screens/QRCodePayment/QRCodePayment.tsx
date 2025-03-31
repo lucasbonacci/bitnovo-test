@@ -1,15 +1,25 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import {SVG} from '@/assets/svg/index';
+import {SVG} from '@/assets/svg';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
 import {SuccessModal} from '@/components';
 import * as NavigationService from '@/navigation/NavigationService';
+import {Paths} from '@/navigation/paths';
+import {RootScreenProps} from '@/navigation/types';
 
-const QRCodePayment = ({route}) => {
-  const {identifier, amount, paymentLink} = route.params;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState({
+interface ModalContent {
+  title: string;
+  subtitle: string;
+  type: string;
+}
+
+type QRCodePaymentProps = RootScreenProps<typeof Paths.QRCodePayment>;
+
+const QRCodePayment: React.FC<QRCodePaymentProps> = ({route}) => {
+  const {identifier, amount, fullUrl} = route.params;
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [modalContent, setModalContent] = useState<ModalContent>({
     title: '',
     subtitle: '',
     type: '',
@@ -17,12 +27,12 @@ const QRCodePayment = ({route}) => {
 
   usePaymentSocket(identifier, 'qr', message => {
     if (message.status === 'CO') {
-      NavigationService.reset('PaymentSuccess');
+      NavigationService.reset(Paths.PaymentSuccess);
     }
 
     if (message.status === 'AC') {
       setModalContent({
-        title: 'Esperando confirmacion',
+        title: 'Esperando confirmación',
         subtitle: 'Pago recibido pero no confirmado aún',
         type: 'loading',
       });
@@ -41,12 +51,11 @@ const QRCodePayment = ({route}) => {
 
       <View style={styles.qrContainer}>
         <QRCode
-          value={paymentLink}
+          value={fullUrl}
           size={350}
           logoSize={30}
           logoBackgroundColor="white"
         />
-
         <View style={styles.logo}>
           <SVG.LogoQr />
         </View>
@@ -57,6 +66,7 @@ const QRCodePayment = ({route}) => {
       <Text style={styles.updateText}>
         Esta pantalla se actualizará automáticamente.
       </Text>
+
       <SuccessModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -67,6 +77,8 @@ const QRCodePayment = ({route}) => {
     </View>
   );
 };
+
+export default QRCodePayment;
 
 const styles = StyleSheet.create({
   container: {
@@ -119,5 +131,3 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 });
-
-export default QRCodePayment;

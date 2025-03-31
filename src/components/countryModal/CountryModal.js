@@ -106,7 +106,7 @@ const CountryModal = ({
             renderItem={({item}) => (
               <CountryItem
                 item={item}
-                isSelected={item.code === selectedCountry.code}
+                isSelected={item.code === selectedCountry?.code}
                 onPress={handleSelectCountry}
               />
             )}

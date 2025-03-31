@@ -1,19 +1,23 @@
 import React, {useEffect, useRef} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-import {SVG} from '@/assets/svg/index';
-import {Button} from '@/components';
 import LottieView from 'lottie-react-native';
 import * as NavigationService from '@/navigation/NavigationService';
+import {SVG} from '@/assets/svg';
+import {Button} from '@/components';
+import {Paths} from '@/navigation/paths';
+import {RootScreenProps} from '@/navigation/types';
 
-const PaymentSuccess = () => {
-  const lottieRef = useRef(null);
+type PaymentSuccessProps = RootScreenProps<typeof Paths.PaymentSuccess>;
+
+const PaymentSuccess: React.FC<PaymentSuccessProps> = () => {
+  const lottieRef = useRef<LottieView | null>(null);
 
   useEffect(() => {
     lottieRef.current?.play();
   }, []);
 
   const handleFinish = () => {
-    NavigationService.reset('CreatePayment');
+    NavigationService.reset(Paths.CreatePayment);
   };
 
   return (
@@ -22,7 +26,7 @@ const PaymentSuccess = () => {
         ref={lottieRef}
         source={require('@/assets/lottie/confetti.json')}
         autoPlay={false}
-        loop={true}
+        loop
         style={styles.lottie}
       />
 
@@ -33,7 +37,14 @@ const PaymentSuccess = () => {
       </View>
 
       <View style={styles.button}>
-        <Button label="Finalizar" variant="secondary" onPress={handleFinish} />
+        <Button
+          label="Finalizar"
+          variant="secondary"
+          onPress={handleFinish}
+          loading={false}
+          disabled={false}
+          icon={null}
+        />
       </View>
     </View>
   );
