@@ -1,3 +1,16 @@
+# Fotos de las vistas de la app:
+
+![Screenshot_20250331-132438](https://github.com/user-attachments/assets/1012dd47-371f-40f0-88e0-e7861bc5ed73)
+![Screenshot_20250331-132444](https://github.com/user-attachments/assets/5e8a8cc3-239c-4866-9e52-b211ca2310c0)
+![Screenshot_20250331-132459](https://github.com/user-attachments/assets/cdcad1cc-99b2-4c3d-8c45-00bae0036092)
+![Screenshot_20250331-132508](https://github.com/user-attachments/assets/305f4e05-24dd-449b-8061-7abe30a23cb4)
+![Screenshot_20250331-132512](https://github.com/user-attachments/assets/eaacb10f-9cb9-415a-aae4-71b3628ed82a)
+![Screenshot_20250331-132528](https://github.com/user-attachments/assets/42203d66-1126-4a52-ba02-92402dd5a41d)
+![Screenshot_20250331-132533](https://github.com/user-attachments/assets/e65db61e-bc66-42dd-8a57-f6972009601b)
+![Screenshot_20250331-132751](https://github.com/user-attachments/assets/f8566716-b592-4c9b-8149-485e22923153)
+![Screenshot_20250331-132934](https://github.com/user-attachments/assets/d06bfcc1-ad1e-4b53-bd70-f665837bb154)
+
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
