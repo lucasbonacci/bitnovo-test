@@ -3,7 +3,7 @@ export type PaymentSocketEvent = {
   reference: string | null;
   created_at: string;
   edited_at: string;
-  status: 'PE' | 'AC' | 'CO' | 'IA' | string;
+  status: 'NC' | 'AC' | 'CO' | 'IA' | string;
   fiat_amount: number;
   crypto_amount: number;
   unconfirmed_amount: number;

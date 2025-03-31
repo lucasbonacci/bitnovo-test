@@ -18,7 +18,7 @@ interface StatusModalProps {
   onClose: () => void;
   title: string;
   subtitle: string;
-  type: 'success' | 'loading' | string;
+  type: 'success' | 'loading' | 'warning'| 'error' | string;
 }
 
 const StatusModal: FC<StatusModalProps> = ({
@@ -28,6 +28,23 @@ const StatusModal: FC<StatusModalProps> = ({
   subtitle,
   type = 'loading',
 }) => {
+
+  const getIcon = () => {
+    switch (type) {
+      case 'success':
+        return <SVG.LightBlueCheck />;
+      case 'loading':
+        return <ActivityIndicator size="large" color="#002859" />;
+      case 'warning':
+        return <SVG.WarningIcon />;
+      case 'error':
+        return <SVG.ErrorIcon />;
+      default:
+        return <SVG.LightBlueCheck />;
+    }
+  }
+
+
   return (
     <Modal animationType="slide" transparent visible={visible}>
       <View style={styles.wrapper}>
@@ -40,11 +57,7 @@ const StatusModal: FC<StatusModalProps> = ({
         <View style={styles.overlay} />
         <View style={styles.modalCard}>
           <View style={styles.iconCircle}>
-            {type === 'success' ? (
-              <SVG.LightBlueCheck />
-            ) : (
-              <ActivityIndicator size="large" color="#002859" />
-            )}
+            {getIcon()}
           </View>
 
           <Text style={styles.title}>{title}</Text>

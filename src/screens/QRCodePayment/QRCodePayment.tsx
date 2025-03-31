@@ -9,7 +9,6 @@ import {Paths} from '@/navigation/paths';
 import {RootScreenProps} from '@/navigation/types';
 import {ModalContent} from '@/types/ModalContent';
 
-
 type QRCodePaymentProps = RootScreenProps<typeof Paths.QRCodePayment>;
 
 const QRCodePayment: React.FC<QRCodePaymentProps> = ({route}) => {
@@ -31,6 +30,26 @@ const QRCodePayment: React.FC<QRCodePaymentProps> = ({route}) => {
         title: 'Esperando confirmación',
         subtitle: 'Pago recibido pero no confirmado aún',
         type: 'loading',
+      });
+      setModalVisible(true);
+    }
+
+    if (message.status === 'IA') {
+      setModalContent({
+        title: 'Pago insuficiente',
+        subtitle:
+          'Para completar el pago debes enviar la cantidad restante a la misma direccion.',
+        type: 'warning',
+      });
+      setModalVisible(true);
+    }
+    // El socket no maneja el caso cuando no se completa la transacción
+    if (message.status === 'NC') {
+      setModalContent({
+        title: 'La transaccion no se ha completado',
+        subtitle:
+          'Puedes intentar realizar el pago nuevamente. Si crees que hay un error, contacta al comerciante',
+        type: 'error',
       });
       setModalVisible(true);
     }

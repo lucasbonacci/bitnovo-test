@@ -51,6 +51,26 @@ const PaymentRequest: React.FC<PaymentRequestProps> = ({route}) => {
       });
       setModalVisible(true);
     }
+
+    if (message.status === 'IA') {
+      setModalContent({
+        title: 'Pago insuficiente',
+        subtitle:
+          'Para completar el pago debes enviar la cantidad restante a la misma direccion.',
+        type: 'warning',
+      });
+      setModalVisible(true);
+    }
+    // El socket no maneja el caso cuando no se completa la transacción
+    if (message.status === 'NC') {
+      setModalContent({
+        title: 'La transaccion no se ha completado',
+        subtitle:
+          'Puedes intentar realizar el pago nuevamente. Si crees que hay un error, contacta al comerciante',
+        type: 'error',
+      });
+      setModalVisible(true);
+    }
   });
 
   const handleCopyLink = () => {
