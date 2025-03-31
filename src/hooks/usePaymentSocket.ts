@@ -8,9 +8,14 @@ export const usePaymentSocket = (
   view: string,
   onMessage: (data: PaymentSocketEvent) => void,
 ) => {
-  const socketRef = useRef<WebSocket | null>(null);
+  const socketRef = useRef<WebSocket | null>(null); // Lógica de background/foreground
   const appStateRef = useRef<AppStateStatus>(AppState.currentState);
   const isFocused = useIsFocused();
+
+  const onMessageRef = useRef(onMessage);
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+  }, [onMessage]);
 
   const connectSocket = useCallback(() => {
     if (!identifier) return;
@@ -26,12 +31,12 @@ export const usePaymentSocket = (
 
     socket.onmessage = event => {
       console.log('WebSocket message:', event.data);
-      if (onMessage) {
+      if (onMessageRef.current) {
         try {
           const parsedData = JSON.parse(event.data);
-          onMessage(parsedData);
-        } catch (erorr) {
-          console.warn('Error parsing WebSocket message:', erorr);
+          onMessageRef.current(parsedData);
+        } catch (error) {
+          console.warn('Error parsing WebSocket message:', error);
         }
       }
     };
@@ -43,7 +48,7 @@ export const usePaymentSocket = (
     socket.onclose = event => {
       console.log('WebSocket closed:', event.code, view);
     };
-  }, [identifier, onMessage, view]);
+  }, [identifier, view]);
 
   const disconnectSocket = useCallback(() => {
     if (socketRef.current) {
