@@ -96,7 +96,10 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({currency}) => {
             separator="."
             precision={2}
             minValue={0}
-            style={styles.amountText}
+            style={[
+              styles.amountText,
+              { color: amount === 0 ? '#C0CCDA' : '#035AC5' } 
+            ]}
             placeholder={getPlaceholder()}
             keyboardType="numeric"
           />
@@ -151,7 +154,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     lineHeight: 50,
     fontFamily: 'Mulish-Bold',
-    color: '#035AC5',
   },
   conceptContainer: {
     marginBottom: 10,
