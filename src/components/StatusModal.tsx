@@ -1,20 +1,33 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {
   Modal,
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
 import {BlurView} from '@react-native-community/blur';
-import {SVG} from '@/assets/svg/index';
+import {SVG} from '@/assets/svg';
 import {Button} from '@/components';
 
 const {width} = Dimensions.get('window');
 
-const SuccessModal = ({visible, onClose, title, subtitle, type}) => {
+interface StatusModalProps {
+  visible: boolean;
+  onClose: () => void;
+  title: string;
+  subtitle: string;
+  type: 'success' | 'loading' | string;
+}
+
+const StatusModal: FC<StatusModalProps> = ({
+  visible,
+  onClose,
+  title,
+  subtitle,
+  type = 'loading',
+}) => {
   return (
     <Modal animationType="slide" transparent visible={visible}>
       <View style={styles.wrapper}>
@@ -30,22 +43,28 @@ const SuccessModal = ({visible, onClose, title, subtitle, type}) => {
             {type === 'success' ? (
               <SVG.LightBlueCheck />
             ) : (
-              <ActivityIndicator size={'large'} color={'#002859'} />
+              <ActivityIndicator size="large" color="#002859" />
             )}
           </View>
 
           <Text style={styles.title}>{title}</Text>
-
           <Text style={styles.message}>{subtitle}</Text>
 
-          <Button label="Entendido" variant="primary" onPress={onClose} />
+          <Button
+            label="Entendido"
+            variant="primary"
+            onPress={onClose}
+            loading={false}
+            disabled={false}
+            icon={null}
+          />
         </View>
       </View>
     </Modal>
   );
 };
 
-export default SuccessModal;
+export default StatusModal;
 
 const styles = StyleSheet.create({
   overlay: {

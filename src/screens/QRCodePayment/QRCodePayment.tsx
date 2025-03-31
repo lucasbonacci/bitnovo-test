@@ -3,16 +3,12 @@ import {View, Text, StyleSheet} from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import {SVG} from '@/assets/svg';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
-import {SuccessModal} from '@/components';
+import {StatusModal} from '@/components';
 import * as NavigationService from '@/navigation/NavigationService';
 import {Paths} from '@/navigation/paths';
 import {RootScreenProps} from '@/navigation/types';
+import {ModalContent} from '@/types/ModalContent';
 
-interface ModalContent {
-  title: string;
-  subtitle: string;
-  type: string;
-}
 
 type QRCodePaymentProps = RootScreenProps<typeof Paths.QRCodePayment>;
 
@@ -67,7 +63,7 @@ const QRCodePayment: React.FC<QRCodePaymentProps> = ({route}) => {
         Esta pantalla se actualizará automáticamente.
       </Text>
 
-      <SuccessModal
+      <StatusModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         title={modalContent.title}

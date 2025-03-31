@@ -8,40 +8,50 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
-import {SVG} from '@/assets/svg/index';
+import {SVG} from '@/assets/svg';
+import {Currency} from '@/types/Currency';
 
-const CurrencyModal = ({
+interface CurrencyModalProps {
+  visible: boolean;
+  onClose: () => void;
+  onSelectCurrency: (currency: Currency) => void;
+  selectedCurrency: Currency;
+}
+
+const CurrencyModal: React.FC<CurrencyModalProps> = ({
   visible,
   onClose,
   onSelectCurrency,
   selectedCurrency,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-
-  const currencies = [
+  const currencies: Currency[] = [
     {name: 'Euro', code: 'EUR'},
     {name: 'Dólar Estadounidense', code: 'USD'},
     {name: 'Libra Esterlina', code: 'GBP'},
   ];
 
-  const [filteredCurrencies, setFilteredCurrencies] = useState(currencies);
+  const [filteredCurrencies, setFilteredCurrencies] =
+    useState<Currency[]>(currencies);
 
   useEffect(() => {
-    const filtered = currencies.filter(
-      currency =>
-        currency.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        currency.code.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
+    const filtered = currencies.filter(currency => {
+      const lowerName = currency.name.toLowerCase();
+      const lowerCode = currency.code.toLowerCase();
+      const lowerQuery = searchQuery.toLowerCase();
+
+      return lowerName.includes(lowerQuery) || lowerCode.includes(lowerQuery);
+    });
     setFilteredCurrencies(filtered);
   }, [searchQuery]);
 
-  const handleSelectCurrency = currency => {
+  const handleSelectCurrency = (currency: Currency) => {
     onSelectCurrency(currency);
     setSearchQuery('');
     onClose();
   };
 
-  const selectSvg = code => {
+  const selectSvg = (code: string) => {
     switch (code) {
       case 'EUR':
         return <SVG.Euro />;
@@ -83,11 +93,7 @@ const CurrencyModal = ({
             const isSelected = item.code === selectedCurrency.code;
             return (
               <TouchableOpacity
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
+                style={styles.listItem}
                 onPress={() => handleSelectCurrency(item)}>
                 <View style={styles.leftSection}>
                   {selectSvg(item.code)}
@@ -96,7 +102,6 @@ const CurrencyModal = ({
                     <Text style={styles.currencyCode}>{item.code}</Text>
                   </View>
                 </View>
-
                 {isSelected ? <SVG.BlueCheck /> : <SVG.RightArrow />}
               </TouchableOpacity>
             );
@@ -150,7 +155,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     marginLeft: 8,
   },
-
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -174,10 +183,5 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: '#647184',
     fontFamily: 'Mulish-Regular',
-  },
-  checkMark: {
-    color: '#007AFF',
-    fontSize: 18,
-    marginRight: 8,
   },
 });

@@ -15,13 +15,9 @@ import {
 import CurrencyModal from '@/components/CurrencyModal';
 import {SVG} from '@/assets/svg/index';
 import {RootStackParamList} from './types';
+import {Currency} from '@/types/Currency';
 
 const Stack = createStackNavigator<RootStackParamList>();
-
-interface Currency {
-  name: string;
-  code: string;
-}
 
 function ApplicationNavigator() {
   const [currency, setCurrency] = useState<Currency>({

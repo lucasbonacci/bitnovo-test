@@ -12,11 +12,7 @@ import CurrencyInput from 'react-native-currency-input';
 import {Button} from '@/components';
 import * as NavigationService from '@/navigation/NavigationService';
 import {Paths} from '@/navigation/paths';
-
-interface Currency {
-  name: string;
-  code: string;
-}
+import {Currency} from '@/types/Currency';
 
 interface CreatePaymentProps {
   currency: Currency;

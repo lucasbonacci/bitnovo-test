@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { ReactNode} from 'react';
 import {
   TouchableOpacity,
   Text,
   StyleSheet,
   View,
   ActivityIndicator,
+  GestureResponderEvent,
 } from 'react-native';
 
-const Button = ({
+interface ButtonProps {
+  label?: string;
+  disabled?: boolean;
+  onPress?: (event: GestureResponderEvent) => void;
+  icon?: ReactNode;
+  variant?: 'primary' | 'secondary' | 'iconOnly' | 'small';
+  loading?: boolean;
+}
+
+export const Button: React.FC<ButtonProps> = ({
   label,
-  disabled,
+  disabled = false,
   onPress,
   icon,
   variant = 'primary',
@@ -76,11 +86,11 @@ const Button = ({
   return (
     <TouchableOpacity
       style={[styles.buttonBase, buttonStyle]}
-      onPress={disabled || loading ? null : onPress}
+      onPress={disabled || loading ? undefined : onPress}
       disabled={disabled || loading}>
       <View style={styles.content}>
         {loading ? (
-          <ActivityIndicator color={textStyle.color || '#FFFFFF'} />
+          <ActivityIndicator color={(textStyle as {color?: string}).color || '#FFFFFF'} />
         ) : (
           <>
             {variant !== 'iconOnly' && label ? (

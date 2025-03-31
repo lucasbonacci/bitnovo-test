@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -7,20 +7,46 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  Image,
   ActivityIndicator,
 } from 'react-native';
-import {SVG} from '@/assets/svg/index';
+import {SVG} from '@/assets/svg';
 import CountryItem from './CountryItem';
+import {Country} from '@/types/Country';
 
-const CountryModal = ({
+interface RestCountry {
+  translations?: {
+    spa?: {
+      common?: string;
+    };
+  };
+  name: {
+    common: string;
+  };
+  idd?: {
+    root?: string;
+    suffixes?: string[];
+  };
+  cca2: string;
+  flags: {
+    png: string;
+  };
+}
+
+interface CountryModalProps {
+  visible: boolean;
+  onClose: () => void;
+  selectedCountry?: Country | null;
+  setSelectedCountry: (country: Country) => void;
+}
+
+export const CountryModal: React.FC<CountryModalProps> = ({
   visible,
   onClose,
   selectedCountry,
   setSelectedCountry,
 }) => {
-  const [countries, setCountries] = useState([]);
-  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -28,13 +54,13 @@ const CountryModal = ({
     const fetchCountries = async () => {
       try {
         const res = await fetch('https://restcountries.com/v3.1/all?lang=es');
-        const data = await res.json();
+        const data = (await res.json()) as RestCountry[];
 
         const formatted = data
-          .filter(c => c.idd?.root && c.idd?.suffixes?.length > 0)
+          .filter(c => c.idd?.root && c.idd?.suffixes && c.idd.suffixes.length > 0)
           .map(c => ({
             name: c.translations?.spa?.common || c.name.common,
-            code: `${c.idd.root}${c.idd.suffixes[0]}`,
+            code: `${c.idd?.root || ''}${c.idd?.suffixes?.[0] || ''}`,
             cca2: c.cca2,
             flag: c.flags.png,
           }))
@@ -53,15 +79,16 @@ const CountryModal = ({
   }, []);
 
   useEffect(() => {
-    const filtered = countries.filter(
-      country =>
-        country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        country.code.includes(searchQuery),
-    );
+    const filtered = countries.filter(country => {
+      const lowerName = country.name.toLowerCase();
+      const lowerCode = country.code.toLowerCase();
+      const lowerQuery = searchQuery.toLowerCase();
+      return lowerName.includes(lowerQuery) || lowerCode.includes(lowerQuery);
+    });
     setFilteredCountries(filtered);
   }, [searchQuery, countries]);
 
-  const handleSelectCountry = country => {
+  const handleSelectCountry = (country: Country) => {
     setSelectedCountry(country);
     setSearchQuery('');
     onClose();
@@ -98,7 +125,7 @@ const CountryModal = ({
         ) : (
           <FlatList
             data={filteredCountries}
-            removeClippedSubviews={true}
+            removeClippedSubviews
             initialNumToRender={10}
             maxToRenderPerBatch={10}
             windowSize={5}

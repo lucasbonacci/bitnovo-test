@@ -11,23 +11,14 @@ import {
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {SVG} from '@/assets/svg/index';
-import {Button, SuccessModal, CountryModal} from '@/components';
+import {Button, StatusModal, CountryModal} from '@/components';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
 import {parsePhoneNumberFromString} from 'libphonenumber-js';
 import * as NavigationService from '@/navigation/NavigationService';
 import {Paths} from '@/navigation/paths';
 import {RootScreenProps} from '@/navigation/types';
-
-interface Country {
-  code: string;
-  cca2: string;
-}
-
-interface ModalContent {
-  title: string;
-  subtitle: string;
-  type: string;
-}
+import {Country} from '@/types/Country';
+import {ModalContent} from '@/types/ModalContent';
 
 type PaymentRequestProps = RootScreenProps<typeof Paths.PaymentRequest>;
 
@@ -236,7 +227,7 @@ const PaymentRequest: React.FC<PaymentRequestProps> = ({route}) => {
           disabled={false}
         />
       </View>
-      <SuccessModal
+      <StatusModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         title={modalContent.title}

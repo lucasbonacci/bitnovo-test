@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { memo} from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
-import {SVG} from '@/assets/svg/index';
+import {SVG} from '@/assets/svg';
+import {Country} from '@/types/Country';
 
-const CountryItem = ({item, isSelected, onPress}) => {
+
+interface CountryItemProps {
+  item: Country;
+  isSelected: boolean;
+  onPress: (country: Country) => void;
+}
+
+const CountryItem: React.FC<CountryItemProps> = ({item, isSelected, onPress}) => {
   return (
     <TouchableOpacity style={styles.row} onPress={() => onPress(item)}>
       <View style={styles.leftSection}>
@@ -20,7 +28,7 @@ const CountryItem = ({item, isSelected, onPress}) => {
   );
 };
 
-export default React.memo(CountryItem);
+export default memo(CountryItem);
 
 const styles = StyleSheet.create({
   row: {
