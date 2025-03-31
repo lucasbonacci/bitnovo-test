@@ -22,6 +22,7 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({currency}) => {
   const [amount, setAmount] = useState<number>(0);
   const [concept, setConcept] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const getCurrencyConfig = () => {
     switch (currency.code) {
@@ -98,7 +99,7 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({currency}) => {
             minValue={0}
             style={[
               styles.amountText,
-              { color: amount === 0 ? '#C0CCDA' : '#035AC5' } 
+              {color: amount === 0 ? '#C0CCDA' : '#035AC5'},
             ]}
             placeholder={getPlaceholder()}
             keyboardType="numeric"
@@ -115,9 +116,11 @@ const CreatePayment: React.FC<CreatePaymentProps> = ({currency}) => {
             maxLength={140}
             multiline
             placeholderTextColor="#647184"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
         </View>
-        {concept.length > 0 && (
+        {(isFocused || concept.length > 0) && (
           <Text style={styles.charCount}>
             {concept.length} / 140 caracteres
           </Text>
