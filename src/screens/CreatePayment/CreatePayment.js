@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import CurrencyInput from 'react-native-currency-input';
 import {Button} from '@/components';
+import * as NavigationService from '@/navigation/NavigationService';
 
-const CreatePayment = ({currency, navigation}) => {
+const CreatePayment = ({currency}) => {
   const [amount, setAmount] = useState(0);
   const [concept, setConcept] = useState('');
   const [loading, setLoading] = useState(false);
@@ -64,7 +65,7 @@ const CreatePayment = ({currency, navigation}) => {
 
       const data = await response.json();
 
-      navigation.navigate('PaymentRequest', {
+      NavigationService.reset('PaymentRequest', {
         data: {...data, amount, prefix, suffix},
       });
     } catch (err) {

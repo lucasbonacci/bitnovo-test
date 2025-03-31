@@ -3,8 +3,9 @@ import {View, Text, StyleSheet} from 'react-native';
 import {SVG} from '@/assets/svg/index';
 import {Button} from '@/components';
 import LottieView from 'lottie-react-native';
+import * as NavigationService from '@/navigation/NavigationService';
 
-const PaymentSuccess = ({navigation}) => {
+const PaymentSuccess = () => {
   const lottieRef = useRef(null);
 
   useEffect(() => {
@@ -12,7 +13,7 @@ const PaymentSuccess = ({navigation}) => {
   }, []);
 
   const handleFinish = () => {
-    navigation.navigate('CreatePayment');
+    NavigationService.reset('CreatePayment');
   };
 
   return (

@@ -14,8 +14,9 @@ import {SVG} from '@/assets/svg/index';
 import {Button, SuccessModal, CountryModal} from '@/components';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
 import {parsePhoneNumberFromString} from 'libphonenumber-js';
+import * as NavigationService from '@/navigation/NavigationService';
 
-const PaymentRequest = ({route, navigation}) => {
+const PaymentRequest = ({route}) => {
   const {amount, prefix, suffix, fiat, web_url, identifier} = route.params.data;
 
   const formattedAmount = `${prefix}${amount.toFixed(2)}${suffix}`;
@@ -33,7 +34,7 @@ const PaymentRequest = ({route, navigation}) => {
 
   usePaymentSocket(identifier, 'payment', message => {
     if (message.status === 'CO') {
-      navigation.navigate('PaymentSuccess');
+      NavigationService.reset('PaymentSuccess');
     }
 
     if (message.status === 'AC') {
@@ -117,7 +118,7 @@ const PaymentRequest = ({route, navigation}) => {
         setModalContent({
           title: 'Diálogo de compartir',
           subtitle: 'Se ha abierto el diálogo para compartir el enlace.',
-          type: 'loading',
+          type: 'success',
         });
         setModalVisible(true);
       }
@@ -153,7 +154,7 @@ const PaymentRequest = ({route, navigation}) => {
             label="Copiar enlace"
             variant="iconOnly"
             onPress={() =>
-              navigation.navigate('QRCodePayment', {
+              NavigationService.navigate('QRCodePayment', {
                 fullUrl,
                 amount: formattedAmount,
                 identifier,
@@ -216,7 +217,7 @@ const PaymentRequest = ({route, navigation}) => {
           label="Nueva solicitud"
           variant="secondary"
           icon={<SVG.AddWallet />}
-          onPress={() => navigation.navigate('CreatePayment')}
+          onPress={() => NavigationService.reset('CreatePayment')}
         />
       </View>
       <SuccessModal

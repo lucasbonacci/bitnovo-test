@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-
+import {navigationRef} from './NavigationService';
+import * as NavigationService from '@/navigation/NavigationService';
 import {Paths} from '@/navigation/paths';
 import {
   CreatePayment,
@@ -14,32 +14,41 @@ import {
 } from '@/screens';
 import CurrencyModal from '@/components/CurrencyModal';
 import {SVG} from '@/assets/svg/index';
-const Stack = createStackNavigator();
+import {RootStackParamList} from './types';
+
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+interface Currency {
+  name: string;
+  code: string;
+}
 
 function ApplicationNavigator() {
-  const [currency, setCurrency] = useState({
+  const [currency, setCurrency] = useState<Currency>({
     name: 'Dólar Estadounidense',
     code: 'USD',
   });
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+      <NavigationContainer ref={navigationRef}>
+        <Stack.Navigator
+          screenOptions={{headerShown: false, gestureEnabled: true}}>
           <Stack.Screen
             name={Paths.CreatePayment}
             options={() => ({
               headerShown: true,
               headerLeft: () => null,
-              title: <Text style={styles.headerTitle}>Crear Pago</Text>,
+              title: 'Crear Pago',
               headerTitleAlign: 'center',
               headerRight: () => (
                 <TouchableOpacity
                   style={styles.currencyButton}
                   onPress={() => setModalVisible(true)}>
-                  <Text style={styles.currencyText}>{currency.code}</Text>
+                  <Text style={styles.currencyText}> {currency.code} </Text>
                   <SVG.ArrowDown />
                 </TouchableOpacity>
               ),
@@ -57,27 +66,27 @@ function ApplicationNavigator() {
             name={Paths.PaymentSuccess}
             options={() => ({
               headerShown: true,
-              title: <SVG.Logo />,
+              title: 'Payment Success',
               headerTitleAlign: 'center',
               headerLeft: () => null,
             })}>
-            {props => <PaymentSuccess {...props} />}
+            {() => <PaymentSuccess />}
           </Stack.Screen>
           <Stack.Screen
             name={Paths.QRCodePayment}
-            options={props => ({
+            options={() => ({
               headerShown: true,
               title: '',
               headerLeft: () => (
                 <TouchableOpacity
                   style={{marginLeft: 10}}
-                  onPress={() => props.navigation.goBack()}>
+                  onPress={() => NavigationService.goBack()}>
                   <SVG.BackArrow />
                 </TouchableOpacity>
               ),
               headerTitleAlign: 'center',
             })}>
-            {props => <QRCodePayment {...props} currency={currency} />}
+            {props => <QRCodePayment {...props} />}
           </Stack.Screen>
         </Stack.Navigator>
         <CurrencyModal
@@ -90,8 +99,6 @@ function ApplicationNavigator() {
     </SafeAreaProvider>
   );
 }
-
-export default ApplicationNavigator;
 
 const styles = StyleSheet.create({
   currencyButton: {
@@ -120,3 +127,5 @@ const styles = StyleSheet.create({
     letterSpacing: 0.2,
   },
 });
+
+export default ApplicationNavigator;

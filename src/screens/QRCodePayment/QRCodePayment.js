@@ -4,6 +4,7 @@ import QRCode from 'react-native-qrcode-svg';
 import {SVG} from '@/assets/svg/index';
 import {usePaymentSocket} from '@/hooks/usePaymentSocket';
 import {SuccessModal} from '@/components';
+import * as NavigationService from '@/navigation/NavigationService';
 
 const QRCodePayment = ({route}) => {
   const {identifier, amount, paymentLink} = route.params;
@@ -16,7 +17,7 @@ const QRCodePayment = ({route}) => {
 
   usePaymentSocket(identifier, 'qr', message => {
     if (message.status === 'CO') {
-      navigation.navigate('PaymentSuccess');
+      NavigationService.reset('PaymentSuccess');
     }
 
     if (message.status === 'AC') {
